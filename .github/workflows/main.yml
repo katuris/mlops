@@ -1,0 +1,13 @@
+name: Azure Container Instance
+
+on:
+  push
+
+
+jobs:
+  azuread:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Microsoft Azure
+      run: |
+        az login --service-principal --tenant ${{ secrets.AZURE_TENANT_ID}} --username ${{ secrets.AZURE_CLIENT_ID}} --password ${{ secrets.AZURE_SECRET_ID}}
