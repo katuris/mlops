@@ -1,0 +1,34 @@
+name: Azure Container Instance
+
+on:
+  push
+
+env:
+  AZURE_RESOURCE_GROUP : test-git
+  AZURE_ACR_NAME : test-git-acr
+
+jobs:
+  azuread:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Microsoft Azure
+      run: |
+        az login --service-principal --tenant ${{ secrets.AZURE_TENANT_ID}} --username ${{ secrets.AZURE_CLIENT_ID}} --password ${{ secrets.AZURE_SECRET_ID}}
+    - name: Create Azure Container Registry
+      run: |
+        az acr create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name ${{ env.AZURE_ACR_NAME }} --sku Basic
+    - name: Enable admin user on ACR
+      run: |
+        az acr update --name ${{ env.AZURE_ACR_NAME }} --admin-enabled true
+    
+    - name: Authenticate to ACR
+      run: |
+        az acr login --name ${{ env.AZURE_ACR_NAME }}
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: ${{ env.AZURE_ACR_NAME }}.azurecr.io/pbkimagepbk:v1
+    - name: Create Azure Container Instance Group
+      run: |
+        az container create --image ${{ env.AZURE_ACR_NAME }}.azurecr.io/pbkimagepbk:v1 --name pbkcontainerpbk --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --ip-address public --dns-name-label pbkdemopbk --location eastus --registry-username ${{ secrets.AZURE_CLIENT_ID}} --registry-password ${{ secrets.AZURE_SECRET_ID}} --os-type Linux --cpu 1 --memory 1 --ports 80
