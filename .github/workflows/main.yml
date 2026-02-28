@@ -31,4 +31,4 @@ jobs:
         tags: ${{ env.AZURE_ACR_NAME }}.azurecr.io/pbkimagepbk:v1
     - name: Create Azure Container Instance Group
       run: |
-        az container create --image ${{ env.AZURE_ACR_NAME }}.azurecr.io/pbkimagepbk:v1 --name pbkcontainerpbk --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --ip-address public --dns-name-label pbkdemopbk --location eastus --registry-username ${{ secrets.AZURE_CLIENT_ID}} --registry-password ${{ secrets.AZURE_SECRET_ID}} --os-type Linux --cpu 1 --memory 1 --ports 80
+        az container create --image ${{ env.AZURE_ACR_NAME }}.azurecr.io/gitimagepbk:v1 --name gitcontainer --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --ip-address public --dns-name-label testgit --location eastus --registry-username ${{ secrets.AZURE_CLIENT_ID}} --registry-password ${{ secrets.AZURE_SECRET_ID}} --os-type Linux --cpu 1 --memory 1 --ports 80
