@@ -5,7 +5,7 @@ on:
 
 env:
   AZURE_RESOURCE_GROUP : test-git
-  AZURE_ACR_NAME : test-git-acr
+  AZURE_ACR_NAME : testgitacr
 
 jobs:
   azuread:
